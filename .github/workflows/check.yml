@@ -40,7 +40,9 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+      # A hung install fails after 10 minutes; "Start the next run" below still fires and retries.
       - run: pip install -r requirements.txt && playwright install --with-deps chromium
+        timeout-minutes: 10
 
       # state.json remembers which slots were already announced.
       - uses: actions/cache/restore@v4
