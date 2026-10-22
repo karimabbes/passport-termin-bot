@@ -19,8 +19,8 @@ then starts the next run itself; an hourly cron restarts the chain if it ever st
    `TELEGRAM_CHAT_ID` separated by commas, e.g. `111111111,222222222`.
    Only slots **up to and including 26 Nov 2026** are reported. To change that, add a repository
    variable `UNTIL_DATE` (e.g. `2026-12-15`).
-   Every check also sends a status message (including "nothing found" and failures). To only get a
-   message when a new slot shows up, add a variable `ALWAYS_NOTIFY` set to `false`.
+   You only get a message when a new slot shows up. To also get a status message after every check
+   (including "nothing found" and failures), add a variable `ALWAYS_NOTIFY` set to `true`.
    To check more or less often, add a variable `CHECK_EVERY_MINUTES` (default `5`).
 4. Go to *Actions → Check passport appointments → Run workflow* and tick **debug** for the first run.
    The `debug` artifact contains a screenshot and the captured JSON, which shows whether the slots were read.

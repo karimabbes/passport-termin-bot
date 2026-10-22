@@ -31,7 +31,7 @@ jobs:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       LOOKAHEAD_DAYS: ${{ vars.LOOKAHEAD_DAYS || '14' }}
       UNTIL_DATE: ${{ vars.UNTIL_DATE || '2026-11-26' }}
-      ALWAYS_NOTIFY: ${{ vars.ALWAYS_NOTIFY || 'true' }}
+      ALWAYS_NOTIFY: ${{ vars.ALWAYS_NOTIFY || 'false' }}
       CHECK_EVERY_MINUTES: ${{ vars.CHECK_EVERY_MINUTES || '5' }}
       LOOP_MINUTES: 330
     steps:
