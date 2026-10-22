@@ -36,7 +36,7 @@ jobs:
           LOOKAHEAD_DAYS: ${{ vars.LOOKAHEAD_DAYS || '14' }}
           UNTIL_DATE: ${{ vars.UNTIL_DATE || '2026-11-26' }}
           # Manual runs always report back, so a "Run workflow" click confirms the bot works.
-          ALWAYS_NOTIFY: ${{ github.event_name == 'workflow_dispatch' && 'true' || vars.ALWAYS_NOTIFY || 'false' }}
+          ALWAYS_NOTIFY: ${{ github.event_name == 'workflow_dispatch' && 'true' || vars.ALWAYS_NOTIFY || 'true' }}
 
       - uses: actions/cache/save@v4
         if: always()
