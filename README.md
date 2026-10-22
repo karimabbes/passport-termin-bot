@@ -13,6 +13,8 @@ the calendar's own availability responses, and messages you about slots it hasn'
    `https://api.telegram.org/bot<TOKEN>/getUpdates` and copy `message.chat.id`.
 3. In the GitHub repo, go to *Settings → Secrets and variables → Actions* and add the secrets
    `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+   To notify several people, each one sends the bot a message, and you put all their chat ids in
+   `TELEGRAM_CHAT_ID` separated by commas, e.g. `111111111,222222222`.
    Only slots **up to and including 26 Nov 2026** are reported. To change that, add a repository
    variable `UNTIL_DATE` (e.g. `2026-12-15`).
    You only get a message when a new slot shows up. To also get a status message after every run

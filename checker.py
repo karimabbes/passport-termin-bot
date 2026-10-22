@@ -150,10 +150,19 @@ def _click_next_month(page):
 
 
 def send_telegram(text):
+    """Send to every chat in TELEGRAM_CHAT_ID (comma-separated); one bad id doesn't block the others."""
     token = os.environ["TELEGRAM_BOT_TOKEN"]
-    chat_id = os.environ["TELEGRAM_CHAT_ID"]
-    data = urllib.parse.urlencode({"chat_id": chat_id, "text": text}).encode()
-    urllib.request.urlopen(f"https://api.telegram.org/bot{token}/sendMessage", data, timeout=30)
+    chat_ids = [c.strip() for c in os.environ["TELEGRAM_CHAT_ID"].split(",") if c.strip()]
+    failed = []
+    for chat_id in chat_ids:
+        data = urllib.parse.urlencode({"chat_id": chat_id, "text": text}).encode()
+        try:
+            urllib.request.urlopen(f"https://api.telegram.org/bot{token}/sendMessage", data, timeout=30)
+        except Exception as exc:
+            print(f"sending to chat #{chat_ids.index(chat_id) + 1} failed: {exc}")
+            failed.append(chat_id)
+    if failed and len(failed) == len(chat_ids):
+        raise RuntimeError("could not send the Telegram message to any chat")
 
 
 def format_slot(slot):
