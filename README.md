@@ -17,6 +17,7 @@ the calendar's own availability responses, and messages you about slots it hasn'
    variable `UNTIL_DATE` (e.g. `2026-12-15`).
    You only get a message when a new slot shows up. To also get a status message after every run
    (including "nothing found" and failures), add a variable `ALWAYS_NOTIFY` set to `true`.
+   Runs you start by hand (*Run workflow*) always send a status message.
 4. Go to *Actions → Check passport appointments → Run workflow* and tick **debug** for the first run.
    The `debug` artifact contains a screenshot and the captured JSON, which shows whether the slots were read.
 
