@@ -104,6 +104,21 @@ def fetch_slots(url, months, max_months=6, debug_dir=None):
     def has_upcoming():
         return any(date.fromisoformat(s[:10]) >= date.today() for s in slots)
 
+    def wait_for_availability(seen_before, timeout_s):
+        """Wait until the calendar has fetched new availability data.
+
+        Waiting for "networkidle" timed out on about half the checks, because the Wix site
+        sometimes keeps background requests going long after the calendar has loaded.
+        """
+        for _ in range(timeout_s * 2):
+            if len(captured) > seen_before:
+                break
+            page.wait_for_timeout(500)
+        else:
+            return False
+        page.wait_for_timeout(2_000)  # the calendar fetches several ranges in parallel
+        return True
+
     with sync_playwright() as p:
         launch = {"headless": True}
         if os.environ.get("CHROMIUM_PATH"):
@@ -111,18 +126,21 @@ def fetch_slots(url, months, max_months=6, debug_dir=None):
         browser = p.chromium.launch(**launch)
         page = browser.new_page(locale="de-DE")
         page.on("response", on_response)
-        page.goto(url, wait_until="networkidle", timeout=90_000)
-        page.wait_for_timeout(3_000)
+        page.goto(url, wait_until="domcontentloaded", timeout=90_000)
+        if not wait_for_availability(0, 60):
+            raise RuntimeError("the booking calendar did not load its availability within 60s")
 
         for loaded in range(1, max_months):
             if loaded >= months and has_upcoming():
                 break
+            seen_before = len(captured)
             if not _click_next_month(page):
                 print("  could not find the next-month button")
                 break
             print(f"  -> next month ({loaded + 1})")
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(2_000)
+            if not wait_for_availability(seen_before, 30):
+                print("  next month did not load its availability")
+                break
 
         if debug_dir:
             Path(debug_dir).mkdir(parents=True, exist_ok=True)
