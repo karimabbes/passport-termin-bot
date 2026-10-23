@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       debug:
-        description: "Check once and upload screenshot and captured responses"
+        description: "Check once, send a status message, and upload screenshot and captured responses"
         type: boolean
         default: false
 
@@ -31,7 +31,8 @@ jobs:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       LOOKAHEAD_DAYS: ${{ vars.LOOKAHEAD_DAYS || '14' }}
       UNTIL_DATE: ${{ vars.UNTIL_DATE || '2026-11-26' }}
-      ALWAYS_NOTIFY: ${{ vars.ALWAYS_NOTIFY || 'false' }}
+      # A debug run always reports back, so it doubles as a Telegram test.
+      ALWAYS_NOTIFY: ${{ inputs.debug && 'true' || vars.ALWAYS_NOTIFY || 'false' }}
       CHECK_EVERY_MINUTES: ${{ vars.CHECK_EVERY_MINUTES || '5' }}
       LOOP_MINUTES: 330
     steps:
